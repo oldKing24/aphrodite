@@ -1,0 +1,32 @@
+server:
+  port: 8090
+
+spring:
+  application:
+    name: aphrodite-gateway
+  cloud:
+    nacos:
+      discovery:
+        server-addr: 127.0.0.1:8848
+    gateway:
+      routes:
+        - id: aphrodite-user
+          uri: lb://aphrodite-user
+          predicates:
+            - Path=/user/**
+          filters:
+            - StripPrefix=1
+        - id: aphrodite-todo
+          uri: lb://aphrodite-todo
+          predicates:
+            - Path=/todo/**
+          filters:
+            - StripPrefix=1
+      loadbalancer:
+        use404: true
+api:
+  ignoreUrl:
+    - /user/user/login
+    - /user/token/refresh
+    - /user/user/register
+    - /user/user/sendCode

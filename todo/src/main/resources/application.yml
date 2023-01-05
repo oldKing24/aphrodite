@@ -1,0 +1,34 @@
+server:
+  port: 8080
+spring:
+  application:
+    name: aphrodite-todo
+  datasource:
+    type: com.alibaba.druid.pool.DruidDataSource
+    druid:
+      driver-class-name: com.mysql.cj.jdbc.Driver
+      url: jdbc:mysql://localhost:3306/aphrodite-todo?useUnicode=true&characterEncoding=utf8&useSSL=false&autoReconnect=true&tinyInt1isBit=false
+      username: root
+      password: 123456
+
+xxl:
+  job:
+    admin:
+      addresses: http://127.0.0.1:20000/xxl-job-admin
+    executor:
+      appName: todo
+      port: 8589
+      ip:
+      logpath:
+      logretentiondays: -1
+    accessToken: default_token
+
+mybatis-plus:
+  mapper-locations:
+    - classpath*:mapper/**/*.xml
+  configuration:
+    map-underscore-to-camel-case: true
+  global-config:
+    db-config:
+      id-type: AUTO
+    banner: false

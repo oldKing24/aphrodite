@@ -1,0 +1,53 @@
+server:
+  port: 8081
+spring:
+  application:
+    name: aphrodite-user
+
+  datasource:
+    type: com.alibaba.druid.pool.DruidDataSource
+    druid:
+      driver-class-name: com.mysql.cj.jdbc.Driver
+      url: jdbc:mysql://localhost:3306/aphrodite-user?useUnicode=true&characterEncoding=utf8&useSSL=false&autoReconnect=true&tinyInt1isBit=false
+      username: root
+      password: 123456
+
+  redis:
+    host: 192.168.107.212
+    port: 6379
+    database: 0
+    password: 123456
+    connect-timeout: 60s
+
+elasticsearch:
+  host: 192.168.107.212
+  port: 9300
+  clustername: docker-cluster
+  search:
+    pool:
+      size: 5
+
+mybatis-plus:
+  mapper-locations:
+    - classpath*:mapper/**/*.xml
+  configuration:
+    map-underscore-to-camel-case: true
+  global-config:
+    db-config:
+      id-type: AUTO
+    banner: false
+rocketmq:
+  name-server: 192.168.107.212:9876
+  producer:
+    group: test
+  consumer:
+    group: test
+    pullBatchSize: 10
+send:
+  email:
+    host: smtp.qq.com
+    port: 25
+    from: 1391121874@qq.com
+    user: 1391121874@qq.com
+    pass: zecplwbdtgmnghjj
+    expireTime: 5
