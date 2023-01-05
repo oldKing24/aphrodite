@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-parent</artifactId>
+        <version>2.6.1</version>
+    </parent>
+    <groupId>com.oldking</groupId>
+    <artifactId>aphrodite</artifactId>
+    <version>0.0.1-SNAPSHOT</version>
+    <name>aphrodite</name>
+    <description>aphrodite</description>
+    <packaging>pom</packaging>
+    <properties>
+        <javax.el.version>3.0.0</javax.el.version>
+        <java.version>1.8</java.version>
+        <javax.annotation-api.version>1.3.2</javax.annotation-api.version>
+        <arch-sketch.version>0.2.1-SNAPSHOT</arch-sketch.version>
+        <mybatis-plus.version>3.4.3.4</mybatis-plus.version>
+        <guava.version>31.1-jre</guava.version>
+        <yunqiao-boot.version>0.1.0-SNAPSHOT</yunqiao-boot.version>
+        <rxjava3.version>3.1.2</rxjava3.version>
+        <javax.servlet-api.version>4.0.1</javax.servlet-api.version>
+        <mapstruct.version>1.4.2.Final</mapstruct.version>
+        <javax.el-api.version>3.0.0</javax.el-api.version>
+        <fastjson.version>1.2.80</fastjson.version>
+        <skywalking.version>8.8.0</skywalking.version>
+        <javassist.version>3.28.0-GA</javassist.version>
+        <logback.version>1.2.9</logback.version>
+        <swagger.version>2.2.0</swagger.version>
+        <rocketmq.version>5.0.0</rocketmq.version>
+    </properties>
+
+    <modules>
+        <module>user</module>
+        <module>todo</module>
+        <module>common</module>
+    </modules>
+
+    <dependencies>
+
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+        </dependency>
+    </dependencies>
+
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>org.springframework.cloud</groupId>
+                <artifactId>spring-cloud-dependencies</artifactId>
+                <version>2021.0.0</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+            <dependency>
+                <groupId>com.alibaba.cloud</groupId>
+                <artifactId>spring-cloud-alibaba-dependencies</artifactId>
+                <version>2021.1</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+            <dependency>
+                <groupId>com.baomidou</groupId>
+                <artifactId>mybatis-plus-boot-starter</artifactId>
+                <version>${mybatis-plus.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.mapstruct</groupId>
+                <artifactId>mapstruct</artifactId>
+                <version>${mapstruct.version}</version>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+            </plugin>
+        </plugins>
+    </build>
+
+</project>
