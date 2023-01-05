@@ -31,6 +31,7 @@ public class ElasticController {
         book.setId(UUID.randomUUID().toString());
         book.setCreateTime(new Date());
         bookService.save(book);
+        log.info("test");
         return AphroditeResponse.success(book.getId());
     }
 
