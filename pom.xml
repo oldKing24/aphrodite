@@ -37,6 +37,7 @@
         <module>user</module>
         <module>todo</module>
         <module>common</module>
+        <module>gateway</module>
     </modules>
 
     <dependencies>
