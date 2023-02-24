@@ -20,7 +20,7 @@ public class TestUser {
         List<UserRequest> userList = new ArrayList<>();
         for (int i = 0; i < 2; i++) {
             UserRequest user = new UserRequest();
-            user.setUserName("1");
+            user.setName("1");
             user.setEmail("111");
             user.setPassword("111");
             user.setVerifyCode(111);

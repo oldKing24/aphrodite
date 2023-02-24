@@ -10,11 +10,11 @@ import java.io.Serializable;
 import java.time.LocalDateTime;
 
 /**
- * @TableName user
+ * @author wangzhiyong
  */
 @Data
-@TableName("user")
-public class PUser implements Serializable {
+@TableName("role")
+public class PRole implements Serializable {
     private static final long serialVersionUID = 1L;
     /**
      *
@@ -27,46 +27,10 @@ public class PUser implements Serializable {
     @TableField("name")
     private String name;
     /**
-     * 登录密码
-     */
-    @TableField("password")
-    private String password;
-    /**
-     * 手机号码
-     */
-    @TableField("sex")
-    private String sex;
-
-    /**
-     * 邮箱
-     */
-    @TableField("email")
-    private String email;
-    /**
-     * 手机号
-     */
-    @TableField("mobile")
-    private String mobile;
-    /**
      * 账号状态,0-正常，1-注销，2-冻结
      */
     @TableField("status")
     private String status;
-    /**
-     * 类型
-     */
-    @TableField("type")
-    private String type;
-    /**
-     * 头像
-     */
-    @TableField("image")
-    private String image;
-    /**
-     * 介绍
-     */
-    @TableField("summary")
-    private String summary;
     /**
      *
      */

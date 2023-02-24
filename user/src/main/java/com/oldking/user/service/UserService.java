@@ -6,13 +6,19 @@ import cn.hutool.extra.mail.MailAccount;
 import cn.hutool.extra.mail.MailUtil;
 import com.oldking.user.config.SendEmailConfig;
 import com.oldking.user.domain.PUser;
+import com.oldking.user.domain.PUserRole;
+import com.oldking.user.enums.Constant;
 import com.oldking.user.enums.EmailSubjectEnum;
 import com.oldking.user.enums.UserStatusEnum;
+import com.oldking.user.enums.UserTypeEnum;
+import com.oldking.user.repository.RoleRepository;
 import com.oldking.user.repository.UserRepository;
+import com.oldking.user.repository.UserRoleRepository;
 import com.oldking.user.request.LoginRequest;
 import com.oldking.user.request.SendCodeRequest;
 import com.oldking.user.request.UserRequest;
 import com.oldking.user.response.TokenResponse;
+import com.oldking.user.utils.ConvertUtil;
 import com.oldking.user.utils.JwtUtil;
 import com.oldking.user.utils.RedisUtil;
 import lombok.extern.slf4j.Slf4j;
@@ -21,6 +27,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.Collections;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -32,21 +39,30 @@ public class UserService {
     @Autowired
     private UserRepository userRepository;
     @Autowired
+    private RoleRepository roleRepository;
+    @Autowired
+    private UserRoleRepository userRoleRepository;
+    @Autowired
     private SendEmailConfig sendEmailConfig;
     @Autowired
     private RedisUtil redisUtil;
 
     @Transactional
-    public Long save(UserRequest request) {
+    public Long register(UserRequest request) {
+        //校验
         validRegister(request);
-        PUser user = new PUser();
-        user.setName(request.getUserName());
-        user.setEmail(request.getEmail());
-        user.setPassword(request.getPassword());
-        user.setStatus(UserStatusEnum.NORMAL.getCode());
+        //添加用户信息
+        PUser user = ConvertUtil.copy(request, PUser.class);
         user.setCreatedTime(LocalDateTime.now());
         user.setUpdatedTime(LocalDateTime.now());
+        user.setStatus(UserStatusEnum.NORMAL.getCode());
+        user.setType(UserTypeEnum.STUDENT.getCode());
         userRepository.save(user);
+        //添加默认学生角色
+        PUserRole userRole = new PUserRole();
+        userRole.setUserId(user.getId());
+        userRole.setRoleId(Constant.STUDENT_ROLE_ID);
+        userRoleRepository.batchInsert(Collections.singletonList(userRole));
         return user.getId();
     }
 
@@ -90,7 +106,7 @@ public class UserService {
         if (userByEmail != null) {
             throw new IllegalArgumentException("该邮件已被注册");
         }
-        PUser userByName = userRepository.findByName(userRequest.getUserName());
+        PUser userByName = userRepository.findByName(userRequest.getName());
         if (userByName != null) {
             throw new IllegalArgumentException("该用户名已被注册");
         }
@@ -104,13 +120,9 @@ public class UserService {
     }
 
     private PUser validLogin(LoginRequest loginRequest) {
-        PUser byEmail = userRepository.findByEmail(loginRequest.getUserName());
-        if (byEmail == null) {
-            throw new IllegalArgumentException("邮箱不存在");
-        }
-        PUser pUser = userRepository.findByAccount(loginRequest.getUserName(), loginRequest.getPassword());
+        PUser pUser = userRepository.findByAccount(loginRequest.getEmail(), loginRequest.getPassword());
         if (pUser == null) {
-            throw new IllegalArgumentException("密码不正确");
+            throw new IllegalArgumentException("账号与密码不正确");
         }
         return pUser;
     }

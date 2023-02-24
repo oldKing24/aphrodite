@@ -13,14 +13,14 @@ spring:
       password: 123456
 
   redis:
-    host: 192.168.107.212
+    host: 172.30.141.111
     port: 6379
     database: 0
     password: 123456
     connect-timeout: 60s
 
 elasticsearch:
-  host: 192.168.107.212
+  host: 172.30.141.111
   port: 9300
   clustername: docker-cluster
   search:
@@ -37,7 +37,7 @@ mybatis-plus:
       id-type: AUTO
     banner: false
 rocketmq:
-  name-server: 192.168.107.212:9876
+  name-server: 172.30.141.111:9876
   producer:
     group: test
   consumer:

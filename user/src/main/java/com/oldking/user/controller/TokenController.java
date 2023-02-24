@@ -30,7 +30,7 @@ public class TokenController {
 
     @PostMapping("/register")
     public AphroditeResponse<Long> register(@Valid @RequestBody UserRequest userRequest) {
-        return AphroditeResponse.success(userService.save(userRequest));
+        return AphroditeResponse.success(userService.register(userRequest));
     }
 
     @PostMapping("/sendCode")

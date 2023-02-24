@@ -61,7 +61,7 @@ public class JwtUtil {
                     .withIssuer("auth0")
                     .withExpiresAt(expireTime)
                     .withClaim("email", pUser.getEmail())
-                    .withClaim("mobile", pUser.getTel())
+                    .withClaim("mobile", pUser.getMobile())
                     .withClaim("userId", pUser.getId())
                     .withClaim("userStatus", pUser.getStatus())
                     .sign(algorithm);
