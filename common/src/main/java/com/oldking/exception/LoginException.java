@@ -1,6 +1,5 @@
-package com.oldking;
+package com.oldking.exception;
 
-import com.oldking.exception.BaseException;
 import com.oldking.response.ResponseCode;
 
 /**

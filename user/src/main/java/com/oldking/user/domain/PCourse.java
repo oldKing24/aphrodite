@@ -19,7 +19,7 @@ public class PCourse implements Serializable {
     /**
      *
      */
-    @TableId(value = "id",type = IdType.AUTO)
+    @TableId(value = "id", type = IdType.AUTO)
     private Long id;
     /**
      * 课程名称
@@ -72,6 +72,11 @@ public class PCourse implements Serializable {
      */
     @TableField("create_user")
     private Long createUser;
+    /**
+     *
+     */
+    @TableField("updated_time")
+    private LocalDateTime updatedTime;
     /**
      *
      */

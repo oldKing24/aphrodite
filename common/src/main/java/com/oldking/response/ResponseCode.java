@@ -23,5 +23,6 @@ public class ResponseCode {
     public static final ResponseCode TOKEN_INVALID = new ResponseCode(10002, "token失效");
     public static final ResponseCode SYSTEM_ERROR = new ResponseCode(10003, "系统异常");
     public static final ResponseCode LOGIN_ERROR = new ResponseCode(10004, "登录失败");
+    public static final ResponseCode ENTITY_NOT_EXIST = new ResponseCode(10005, "数据不存在");
 
 }

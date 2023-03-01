@@ -11,16 +11,16 @@ public class LoginUtil {
         if (loginBean == null) {
             return null;
         }
-        if (StringUtils.isBlank(loginBean.getUserId())) {
+        if (loginBean.getUserId() == null) {
             return null;
         }
         if (StringUtils.isBlank(loginBean.getUserName())) {
-            return loginBean.getUserId();
+            return loginBean.getUserId().toString();
         }
         return String.format("%s:%s", loginBean.getUserId(), loginBean.getUserName());
     }
 
-    public static String getCurrentUserId() {
+    public static Long getCurrentUserId() {
         LoginBean loginBean = threadLocal.get();
         return loginBean == null ? null : loginBean.getUserId();
     }

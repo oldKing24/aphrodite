@@ -1,7 +1,7 @@
 package com.oldking.user.handler;
 
 import com.auth0.jwt.exceptions.JWTVerificationException;
-import com.oldking.LoginException;
+import com.oldking.exception.LoginException;
 import com.oldking.response.ResponseCode;
 import com.oldking.user.config.ApplicationYml;
 import com.oldking.user.utils.JwtUtil;
@@ -25,7 +25,7 @@ public class LoginInterceptor implements HandlerInterceptor {
     @Autowired
     private ApplicationYml applicationYml;
 
-    private AntPathMatcher antPathMatcher = new AntPathMatcher();
+    private final AntPathMatcher antPathMatcher = new AntPathMatcher();
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) {

@@ -79,7 +79,7 @@ public class JwtUtil {
                 .build(); //Reusable verifier instance
         DecodedJWT jwt = verifier.verify(token);
         String name = jwt.getClaim("name").asString();
-        String userId = jwt.getClaim("userId").asString();
+        Long userId = jwt.getClaim("userId").asLong();
         String userStatus = jwt.getClaim("userStatus").asString();
         return new LoginBean(userId, name, userStatus);
     }
