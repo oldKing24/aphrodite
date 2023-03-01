@@ -44,12 +44,6 @@ public class TokenController {
         return AphroditeResponse.success(userService.login(loginRequest));
     }
 
-
-    @GetMapping("/refresh")
-    public AphroditeResponse<String> refresh(@RequestParam("refreshToken") String refreshToken) {
-        return AphroditeResponse.success(JwtUtil.createToken(refreshToken));
-    }
-
     @PostMapping("/valid")
     public AphroditeResponse<Void> valid(@RequestParam("token") String token) {
         log.info("token:[{}]", token);

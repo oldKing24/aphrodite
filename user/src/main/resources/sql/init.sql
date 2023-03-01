@@ -105,3 +105,13 @@ CREATE TABLE `course_comment`
     PRIMARY KEY (`id`) USING BTREE
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COMMENT='课程评论明细表';
 
+CREATE TABLE `config`
+(
+    `id`      bigint(20) NOT NULL AUTO_INCREMENT COMMENT '主键ID',
+    `code`    varchar(100) DEFAULT NULL COMMENT '配置code',
+    `content` text DEFAULT NULL COMMENT '配置内容',
+    `desc`    varchar(255) DEFAULT NULL COMMENT '描述',
+    `type`    varchar(32)  DEFAULT NULL COMMENT '类型',
+    PRIMARY KEY (`id`) USING BTREE
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COMMENT='配置表';
+

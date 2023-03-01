@@ -4,7 +4,9 @@ import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.util.NumberUtil;
 import cn.hutool.extra.mail.MailAccount;
 import cn.hutool.extra.mail.MailUtil;
+import com.oldking.response.PageBean;
 import com.oldking.user.config.SendEmailConfig;
+import com.oldking.user.domain.PRole;
 import com.oldking.user.domain.PUser;
 import com.oldking.user.domain.PUserRole;
 import com.oldking.user.enums.Constant;
@@ -17,9 +19,12 @@ import com.oldking.user.repository.UserRoleRepository;
 import com.oldking.user.request.LoginRequest;
 import com.oldking.user.request.SendCodeRequest;
 import com.oldking.user.request.UserRequest;
+import com.oldking.user.response.Role;
 import com.oldking.user.response.TokenResponse;
+import com.oldking.user.response.User;
 import com.oldking.user.utils.ConvertUtil;
 import com.oldking.user.utils.JwtUtil;
+import com.oldking.user.utils.Md5Util;
 import com.oldking.user.utils.RedisUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,6 +34,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
 
 /**
  * @author wangzhiyong
@@ -57,6 +63,7 @@ public class UserService {
         user.setUpdatedTime(LocalDateTime.now());
         user.setStatus(UserStatusEnum.NORMAL.getCode());
         user.setType(UserTypeEnum.STUDENT.getCode());
+        user.setPassword(Md5Util.encodedPassword(user.getPassword()));
         userRepository.save(user);
         //添加默认学生角色
         PUserRole userRole = new PUserRole();
@@ -69,6 +76,12 @@ public class UserService {
     public TokenResponse login(LoginRequest request) {
         PUser pUser = validLogin(request);
         return JwtUtil.login(pUser);
+    }
+
+    public PageBean<User> page(User user, long page, long rows, String sortField, String sortType) {
+        PageBean<PUser> pageBean = userRepository.page(user, page, rows, sortField, sortType);
+        return new PageBean<>(pageBean.getList().stream().map(x -> ConvertUtil.copy(x, User.class))
+                .collect(Collectors.toList()), pageBean.getTotal(), pageBean.getPages());
     }
 
     public void sendCode(SendCodeRequest sendCodeRequest) {
@@ -120,7 +133,8 @@ public class UserService {
     }
 
     private PUser validLogin(LoginRequest loginRequest) {
-        PUser pUser = userRepository.findByAccount(loginRequest.getEmail(), loginRequest.getPassword());
+        String password = Md5Util.encodedPassword(loginRequest.getPassword());
+        PUser pUser = userRepository.findByAccount(loginRequest.getEmail(), password);
         if (pUser == null) {
             throw new IllegalArgumentException("账号与密码不正确");
         }

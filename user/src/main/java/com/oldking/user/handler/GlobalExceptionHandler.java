@@ -1,6 +1,7 @@
 package com.oldking.user.handler;
 
 import com.auth0.jwt.exceptions.JWTVerificationException;
+import com.oldking.exception.BaseException;
 import com.oldking.response.AphroditeResponse;
 import com.oldking.response.ResponseCode;
 import lombok.extern.slf4j.Slf4j;
@@ -15,6 +16,18 @@ import java.util.stream.Collectors;
 @ControllerAdvice
 @Slf4j
 public class GlobalExceptionHandler {
+
+    @ExceptionHandler(value = BaseException.class)
+    @ResponseBody
+    public AphroditeResponse checkExceptionHandler(BaseException e) {
+        log.error("", e);
+
+        AphroditeResponse response = new AphroditeResponse();
+        response.setCode(e.getResponseCode().getCode());
+        response.setMsg(e.getMessage());
+        response.setSuccess(false);
+        return response;
+    }
 
     @ExceptionHandler(value = JWTVerificationException.class)
     @ResponseBody

@@ -18,8 +18,8 @@ import java.net.InetAddress;
  * @author wangzhiyong
  */
 @Slf4j
-@Configuration
-@EnableElasticsearchRepositories(basePackages = "com.oldking.user.repository")
+//@Configuration
+//@EnableElasticsearchRepositories(basePackages = "com.oldking.user.repository")
 public class ElasticsearchConfig {
     @Value("${elasticsearch.host}")
     private String esHost;
@@ -34,7 +34,7 @@ public class ElasticsearchConfig {
     private Integer threadPoolSearchSize;
 
 
-    @Bean
+//    @Bean
     public Client client() throws Exception {
         Settings esSettings = Settings.builder()
                 .put("cluster.name", esClusterName)
@@ -47,7 +47,7 @@ public class ElasticsearchConfig {
                 .addTransportAddress(new TransportAddress(InetAddress.getByName(esHost), esPort));
     }
 
-    @Bean(name = "elasticsearchTemplate")
+//    @Bean(name = "elasticsearchTemplate")
     public ElasticsearchOperations elasticsearchTemplateCustom() throws Exception {
         ElasticsearchTemplate elasticsearchTemplate;
         try {

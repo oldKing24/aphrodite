@@ -1,8 +1,11 @@
 package com.oldking.user.repository;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.oldking.response.PageBean;
 import com.oldking.user.domain.PUser;
 import com.oldking.user.mapper.UserMapper;
+import com.oldking.user.response.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
@@ -36,5 +39,14 @@ public class UserRepository {
         query.eq("email", email);
         query.eq("password", password);
         return userMapper.selectOne(query);
+    }
+
+    public PageBean<PUser> page(User user, long page, long rows, String sortField, String sortType) {
+        QueryWrapper<PUser> query = new QueryWrapper<>();
+        query.eq(user.getId() != null, "id", user.getId());
+        Page<PUser> pageHelper = new Page<>(page, rows);
+        query.orderBy(true, "asc".equals(sortType), sortField);
+        pageHelper = userMapper.selectPage(pageHelper, query);
+        return new PageBean<>(pageHelper.getRecords(), pageHelper.getTotal(), page);
     }
 }

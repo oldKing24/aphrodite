@@ -13,29 +13,29 @@ import java.util.Optional;
 /**
  * @author wangzhiyong
  */
-@Service
+//@Service
 public class BookService {
-    @Autowired
+//    @Autowired
     private BookRepository bookRepository;
 
-    public Optional<Book> findById(String id) {
-        return bookRepository.findById(id);
-    }
-
-    public Book save(Book blog) {
-        return bookRepository.save(blog);
-    }
-
-    public void delete(Book blog) {
-        bookRepository.delete(blog);
-    }
-
-    public Optional<Book> findOne(String id) {
-        return bookRepository.findById(id);
-    }
-
-    public List<Book> findAll() {
-        return (List<Book>) bookRepository.findAll();
-    }
+//    public Optional<Book> findById(String id) {
+//        return bookRepository.findById(id);
+//    }
+//
+//    public Book save(Book blog) {
+//        return bookRepository.save(blog);
+//    }
+//
+//    public void delete(Book blog) {
+//        bookRepository.delete(blog);
+//    }
+//
+//    public Optional<Book> findOne(String id) {
+//        return bookRepository.findById(id);
+//    }
+//
+//    public List<Book> findAll() {
+//        return (List<Book>) bookRepository.findAll();
+//    }
 
 }

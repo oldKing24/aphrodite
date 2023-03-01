@@ -51,3 +51,8 @@ send:
     user: 1391121874@qq.com
     pass: zecplwbdtgmnghjj
     expireTime: 5
+
+ignore:
+  paths:
+    - /user/*
+    - /token/*
