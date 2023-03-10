@@ -23,25 +23,30 @@ public class ExportComposite implements ExportDispatcher<BaseExportRequest> {
     private ExportTaskService exportTaskService;
 
     @Override
-    public Long commitTask(String type, Long taskId, String extra) {
+    public Long commitExportTask(String type, Long taskId, String extra) {
         // 创建任务
         taskId = exportTaskService.save(type);
         // 提交任务
-        BaseExportRequest request = new BaseExportRequest();
-        request.setType(type);
-        request.setTaskId(taskId);
-        request.setExtra(extra);
-        String requestStr = JSONObject.toJSONString(request);
-        getInstanceByType(type).commitTask(type, taskId, requestStr);
+        getInstanceByType(type).commitExportTask(type, taskId, getRequestStr(type, taskId, extra));
         return taskId;
     }
 
     @Override
-    public void doJob(String type, Long taskId, String searchBody) {
+    public void doExportJob(String type, Long taskId, String searchBody) {
         // 更新任务进行中
         exportTaskService.running(taskId);
         // 执行任务
-        getInstanceByType(type).doJob(type, taskId, searchBody);
+        getInstanceByType(type).doExportJob(type, taskId, searchBody);
+    }
+
+    @Override
+    public Long commitImportTask(String type, Long taskId, String filePath) {
+        return null;
+    }
+
+    @Override
+    public void doImportJob(String type, Long taskId) {
+
     }
 
     private ExportDispatcher getInstanceByType(String type) {
@@ -53,5 +58,13 @@ public class ExportComposite implements ExportDispatcher<BaseExportRequest> {
             throw new BaseException("不支持的导出类型");
         }
         return exportDispatcher;
+    }
+
+    private String getRequestStr(String type, Long taskId, String extra) {
+        BaseExportRequest request = new BaseExportRequest();
+        request.setType(type);
+        request.setTaskId(taskId);
+        request.setExtra(extra);
+        return JSONObject.toJSONString(request);
     }
 }

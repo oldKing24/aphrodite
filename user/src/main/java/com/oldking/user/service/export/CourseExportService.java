@@ -48,13 +48,13 @@ public class CourseExportService implements ExportDispatcher<CourseExportRequest
     private ExportTaskService exportTaskService;
 
     @Override
-    public Long commitTask(String type, Long taskId, String extra) {
+    public Long commitExportTask(String type, Long taskId, String extra) {
         rocketMQProducer.sendExportMsg("test", type, extra);
         return taskId;
     }
 
     @Override
-    public void doJob(String type, Long taskId, String searchBody) {
+    public void doExportJob(String type, Long taskId, String searchBody) {
         // 开始导出
         log.info("---异步执行课程导出---");
         String fileName = "course" + System.currentTimeMillis() + ".xlsx";
@@ -107,6 +107,16 @@ public class CourseExportService implements ExportDispatcher<CourseExportRequest
         log.info("---异步执行课程导出完成---");
         // 更新成功任务
         exportTaskService.success(taskId, uploadFileUrl);
+    }
+
+    @Override
+    public Long commitImportTask(String type, Long taskId, String filePath) {
+        return null;
+    }
+
+    @Override
+    public void doImportJob(String type, Long taskId) {
+
     }
 
     private ECourse initExcel(PCourse pCourse) {

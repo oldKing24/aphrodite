@@ -1,6 +1,7 @@
 package com.oldking.user.utils;
 
 import cn.hutool.core.lang.Assert;
+import cn.hutool.http.HttpUtil;
 import com.alibaba.fastjson.JSONObject;
 import com.oldking.exception.BaseException;
 import com.oldking.user.config.QiNiuYunConfig;
@@ -140,6 +141,11 @@ public class FileUtil {
                 now.getYear(), month < 10 ? "0" + month : month, timeStrap, Math.round(3F), fileName);
     }
 
+    public Long downLoadHttpFile(String targetFile, String localFilePath) {
+        long size = HttpUtil.downloadFile(targetFile, localFilePath);
+        return size;
+    }
+
     /**
      * 根据内容写入对应的文件路径
      *
@@ -219,6 +225,8 @@ public class FileUtil {
     }
 
     public static void main(String[] args) throws Exception {
-        readFile();
+        FileUtil fileUtil = new FileUtil();
+        Long size = fileUtil.downLoadHttpFile("http://rr4qzku9r.hn-bkt.clouddn.com/202303/202303091120542433.course1678331979460.xlsx", "D:\\tmp\\course1678331979460.xlsx");
+        System.out.println(size);
     }
 }

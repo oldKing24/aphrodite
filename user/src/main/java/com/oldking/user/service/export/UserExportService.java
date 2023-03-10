@@ -14,12 +14,22 @@ public class UserExportService implements ExportDispatcher<UserExportRequest> {
     public static final String BEAN_ID = ExportTypeConstant.USER;
 
     @Override
-    public Long commitTask(String type, Long taskId, String searchBody) {
+    public Long commitExportTask(String type, Long taskId, String searchBody) {
         return taskId;
     }
 
     @Override
-    public void doJob(String type, Long taskId, String searchBody) {
+    public void doExportJob(String type, Long taskId, String searchBody) {
         log.info("---异步执行用户导出---");
+    }
+
+    @Override
+    public Long commitImportTask(String type, Long taskId, String filePath) {
+        return null;
+    }
+
+    @Override
+    public void doImportJob(String type, Long taskId) {
+
     }
 }

@@ -28,6 +28,6 @@ public class ExportConsumer implements RocketMQListener<String> {
             log.info("消息类型不正确，忽略消息");
             return;
         }
-        exportComposite.doJob(request.getType(), request.getTaskId(), s);
+        exportComposite.doExportJob(request.getType(), request.getTaskId(), s);
     }
 }
