@@ -1,12 +1,16 @@
 package com.oldking.user.service;
 
+import com.oldking.user.domain.PCourse;
 import com.oldking.user.repository.CourseRepository;
 import com.oldking.user.repository.CourseStudentRepository;
 import com.oldking.user.request.MyCourseRequest;
 import com.oldking.user.response.Course;
+import com.oldking.user.utils.ConvertUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -21,8 +25,10 @@ public class StudentService {
     private CourseStudentRepository courseStudentRepository;
 
     public List<Course> myCourse(MyCourseRequest request) {
-        // 查询与我相关的课程id
-        // 根据课程id查询课程集合返回
-        return null;
+        List<PCourse> pCourses = courseRepository.listCourse(request);
+        if (CollectionUtils.isEmpty(pCourses)) {
+            return Collections.emptyList();
+        }
+        return ConvertUtil.copyList(pCourses, Course.class);
     }
 }

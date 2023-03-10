@@ -109,9 +109,21 @@ CREATE TABLE `config`
 (
     `id`      bigint(20) NOT NULL AUTO_INCREMENT COMMENT '主键ID',
     `code`    varchar(100) DEFAULT NULL COMMENT '配置code',
-    `content` text DEFAULT NULL COMMENT '配置内容',
+    `content` text         DEFAULT NULL COMMENT '配置内容',
     `desc`    varchar(255) DEFAULT NULL COMMENT '描述',
     `type`    varchar(32)  DEFAULT NULL COMMENT '类型',
     PRIMARY KEY (`id`) USING BTREE
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COMMENT='配置表';
+
+CREATE TABLE `export_task`
+(
+    `id`         bigint(20) NOT NULL AUTO_INCREMENT COMMENT '主键ID',
+    `type`       varchar(32)  DEFAULT NULL COMMENT '类型',
+    `status`     varchar(2)   DEFAULT NULL COMMENT '状态 0-进行中 1-已完成 2-失败',
+    `url`        varchar(255) DEFAULT NULL COMMENT '文件链接',
+    `desc`       text         DEFAULT NULL COMMENT '描述',
+    `start_time` datetime     DEFAULT NULL COMMENT '开始时间',
+    `end_time`   datetime     DEFAULT NULL COMMENT '结束时间',
+    PRIMARY KEY (`id`) USING BTREE
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COMMENT='导出任务表';
 

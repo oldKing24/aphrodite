@@ -56,3 +56,9 @@ ignore:
   paths:
     - /user/*
     - /token/*
+
+qiniuyun:
+  accessKey: UY9kyMCfwwWgvPEYSBBSMv6SxaiVsz5BY9Byn_IU
+  secretKey: dFOmr1t312j7y2gHnjncj7A3UD-ZaDYVLtCFdnaZ
+  bucket: oldking-course
+  tmpDir: D:\\tmp

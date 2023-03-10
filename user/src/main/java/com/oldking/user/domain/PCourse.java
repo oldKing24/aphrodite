@@ -50,7 +50,7 @@ public class PCourse implements Serializable {
      * 任课老师id
      */
     @TableField("teacher_id")
-    private String teacherId;
+    private Long teacherId;
     /**
      * 封面
      */
@@ -65,8 +65,8 @@ public class PCourse implements Serializable {
     /**
      *
      */
-    @TableField("created_time")
-    private LocalDateTime createdTime;
+    @TableField("create_time")
+    private LocalDateTime createTime;
     /**
      *
      */
@@ -75,8 +75,8 @@ public class PCourse implements Serializable {
     /**
      *
      */
-    @TableField("updated_time")
-    private LocalDateTime updatedTime;
+    @TableField("update_time")
+    private LocalDateTime updateTime;
     /**
      *
      */

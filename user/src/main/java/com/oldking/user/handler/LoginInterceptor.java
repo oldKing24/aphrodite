@@ -3,7 +3,7 @@ package com.oldking.user.handler;
 import com.auth0.jwt.exceptions.JWTVerificationException;
 import com.oldking.exception.LoginException;
 import com.oldking.response.ResponseCode;
-import com.oldking.user.config.ApplicationYml;
+import com.oldking.user.config.IgnorePathConfig;
 import com.oldking.user.utils.JwtUtil;
 import com.oldking.user.utils.LoginBean;
 import com.oldking.user.utils.LoginUtil;
@@ -23,7 +23,7 @@ import java.util.List;
 @Slf4j
 public class LoginInterceptor implements HandlerInterceptor {
     @Autowired
-    private ApplicationYml applicationYml;
+    private IgnorePathConfig ignorePathConfig;
 
     private final AntPathMatcher antPathMatcher = new AntPathMatcher();
 
@@ -41,7 +41,7 @@ public class LoginInterceptor implements HandlerInterceptor {
             loginBean = JwtUtil.decodeLogin(token);
         } catch (JWTVerificationException e) {
             log.error("invalid token:{},cause:{}", token, e.getMessage());
-            return false;
+            throw new LoginException(ResponseCode.LOGIN_ERROR);
         }
         LoginUtil.setLogin(loginBean);
         log.info(loginBean.toString());
@@ -55,7 +55,7 @@ public class LoginInterceptor implements HandlerInterceptor {
     }
 
     private boolean ignoreUrl(String path) {
-        List<String> paths = applicationYml.getPaths();
+        List<String> paths = ignorePathConfig.getPaths();
         if (CollectionUtils.isEmpty(paths)) {
             return false;
         }

@@ -1,17 +1,36 @@
 package com.oldking.user.utils;
 
 import cn.hutool.core.lang.Assert;
+import com.alibaba.fastjson.JSONObject;
+import com.oldking.exception.BaseException;
+import com.oldking.user.config.QiNiuYunConfig;
+import com.qiniu.common.QiniuException;
+import com.qiniu.http.Response;
+import com.qiniu.storage.Configuration;
+import com.qiniu.storage.Region;
+import com.qiniu.storage.UploadManager;
+import com.qiniu.storage.model.DefaultPutRet;
+import com.qiniu.storage.persistent.FileRecorder;
+import com.qiniu.util.Auth;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+import org.springframework.web.multipart.MultipartFile;
 
+import javax.annotation.PostConstruct;
 import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -19,7 +38,108 @@ import java.util.Set;
  * @author wangzhiyong
  */
 @Slf4j
+@Component
 public class FileUtil {
+    private UploadManager uploadManager;
+
+    private UploadManager bigFileUploadManager;
+    @Autowired
+    private QiNiuYunConfig qiNiuYunConfig;
+
+    @PostConstruct
+    public void init() {
+        Configuration cfg = new Configuration(Region.region2());
+        cfg.resumableUploadAPIVersion = Configuration.ResumableUploadAPIVersion.V2;// 指定分片上传版本
+        //...其他参数参考类注释
+        uploadManager = new UploadManager(cfg);
+        Configuration bigFileCfg = new Configuration(Region.region2());
+        bigFileCfg.resumableUploadAPIVersion = Configuration.ResumableUploadAPIVersion.V2;// 指定分片上传版本
+        bigFileCfg.resumableUploadMaxConcurrentTaskCount = 2;  // 设置分片上传并发，1：采用同步上传；大于1：采用并发上传
+        FileRecorder fileRecorder = null;
+        try {
+            fileRecorder = new FileRecorder(qiNiuYunConfig.getTmpDir());
+        } catch (IOException e) {
+            log.error("初始化失败,原因：{}", e.getMessage());
+            throw new BaseException("初始化失败");
+        }
+        bigFileUploadManager = new UploadManager(bigFileCfg, fileRecorder);
+    }
+
+    public String uploadFile(File file) {
+        try {
+            String name = getPath(file.getName());
+            FileInputStream fis = new FileInputStream(file);
+            uploadInputStream(fis, name);
+            return name;
+        } catch (FileNotFoundException e) {
+            throw new BaseException("文件不存在");
+        }
+    }
+
+    public String uploadBigFile(String localFilePath, String fileName) {
+        String token = getToken();
+        //设置断点续传文件进度保存目录
+        String path = getPath(fileName);
+        try {
+            Response response = bigFileUploadManager.put(localFilePath, path, token);
+            return path;
+        } catch (QiniuException ex) {
+            Response r = ex.response;
+            log.error("文件上传异常,{}", r.getInfo());
+            throw new BaseException("文件上传异常" + r.getInfo());
+        }
+    }
+
+    public String uploadFile(MultipartFile file) {
+        try {
+            String name = getPath(file.getOriginalFilename());
+            uploadInputStream(file.getInputStream(), name);
+            return name;
+        } catch (IOException e) {
+            throw new BaseException("文件不存在");
+        }
+    }
+
+    public Response uploadByte(byte[] bytes, String key) {
+        String token = getToken();
+        try {
+            Response response = uploadManager.put(bytes, key, token);
+            //解析上传成功的结果
+            DefaultPutRet putRet = JSONObject.parseObject(response.bodyString(), DefaultPutRet.class);
+            log.info("上传结果：{}", putRet);
+            return response;
+        } catch (QiniuException ex) {
+            throw new BaseException(ex.getMessage());
+        }
+    }
+
+    public Response uploadInputStream(InputStream inputStream, String key) {
+        String token = getToken();
+        try {
+            Response response = uploadManager.put(inputStream, key, token, null, null);
+            //解析上传成功的结果
+            DefaultPutRet putRet = JSONObject.parseObject(response.bodyString(), DefaultPutRet.class);
+            log.info("上传结果：{}", putRet);
+            return response;
+        } catch (QiniuException ex) {
+            throw new BaseException(ex.getMessage());
+        }
+    }
+
+    public String getToken() {
+        Auth auth = Auth.create(qiNiuYunConfig.getAccessKey(), qiNiuYunConfig.getSecretKey());
+        String upToken = auth.uploadToken(qiNiuYunConfig.getBucket());
+        return upToken;
+    }
+
+    public String getPath(String fileName) {
+        LocalDateTime now = LocalDateTime.now();
+        int month = now.getMonth().getValue();
+        String timeStrap = now.format(DateTimeFormatter.ofPattern("yyyyMMddHHmmssSSS"));
+        return String.format("%s%s/%s%s.%s",
+                now.getYear(), month < 10 ? "0" + month : month, timeStrap, Math.round(3F), fileName);
+    }
+
     /**
      * 根据内容写入对应的文件路径
      *

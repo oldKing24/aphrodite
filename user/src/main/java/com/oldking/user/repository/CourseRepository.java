@@ -6,10 +6,14 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.oldking.response.PageBean;
 import com.oldking.user.domain.PCourse;
 import com.oldking.user.mapper.CourseMapper;
+import com.oldking.user.request.MyCourseRequest;
 import com.oldking.user.response.Course;
+import com.oldking.user.utils.LoginUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import org.springframework.util.Assert;
+
+import java.util.List;
 
 /**
  * @author wangzhiyong
@@ -49,5 +53,9 @@ public class CourseRepository {
         query.orderBy(true, "asc".equals(sortType), sortField);
         pageHelper = courseMapper.selectPage(pageHelper, query);
         return new PageBean<>(pageHelper.getRecords(), pageHelper.getTotal(), page);
+    }
+
+    public List<PCourse> listCourse(MyCourseRequest request) {
+        return courseMapper.listCourse(request.getStartTime(), request.getEndTime(), LoginUtil.getCurrentUserId());
     }
 }

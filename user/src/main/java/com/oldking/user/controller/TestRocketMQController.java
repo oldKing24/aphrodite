@@ -21,7 +21,7 @@ public class TestRocketMQController {
 
     @GetMapping("/send")
     public AphroditeResponse<Long> sendMsg(@RequestParam("msg") String msg) {
-        rocketMQProducer.sendMsg("test", msg);
+        rocketMQProducer.sendExportMsg("test", "test", msg);
         return AphroditeResponse.success();
     }
 }

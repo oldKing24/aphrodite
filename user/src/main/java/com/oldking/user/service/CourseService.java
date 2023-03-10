@@ -41,9 +41,9 @@ public class CourseService {
     public Long save(Course course) {
         // 保存课程信息
         PCourse pCourse = ConvertUtil.copy(course, PCourse.class);
-        pCourse.setCreatedTime(LocalDateTime.now());
+        pCourse.setCreateTime(LocalDateTime.now());
         pCourse.setCreateUser(LoginUtil.getCurrentUserId());
-        pCourse.setUpdatedTime(LocalDateTime.now());
+        pCourse.setUpdateTime(LocalDateTime.now());
         pCourse.setUpdateUser(LoginUtil.getCurrentUserId());
         courseRepository.save(pCourse);
         // 保存课程关联学生信息
@@ -69,9 +69,10 @@ public class CourseService {
         if (detail == null) {
             throw new CourseException(ResponseCode.ENTITY_NOT_EXIST);
         }
-        course.setUpdatedTime(LocalDateTime.now());
+        course.setUpdateTime(LocalDateTime.now());
         course.setUpdateUser(LoginUtil.getCurrentUserId());
-        courseRepository.edit(detail);
+        PCourse pCourse = ConvertUtil.copy(course, PCourse.class);
+        courseRepository.edit(pCourse);
     }
 
     @Transactional

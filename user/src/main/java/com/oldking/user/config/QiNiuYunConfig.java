@@ -4,14 +4,15 @@ import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Component;
 
-import java.util.List;
-
 /**
  * @author wangzhiyong
  */
 @Component
-@ConfigurationProperties("ignore")
+@ConfigurationProperties("qiniuyun")
 @Data
-public class ApplicationYml {
-    private List<String> paths;
+public class QiNiuYunConfig {
+    private String accessKey;
+    private String secretKey;
+    private String bucket;
+    private String tmpDir;
 }

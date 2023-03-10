@@ -13,11 +13,12 @@ public class BaseException extends RuntimeException {
         this.responseCode = responseCode;
     }
 
-    public ResponseCode getResponseCode() {
-        return responseCode;
+    public BaseException(String message) {
+        super(message);
+        responseCode = ResponseCode.OTHER_ERROR;
     }
 
-    public void setResponseCode(ResponseCode responseCode) {
-        this.responseCode = responseCode;
+    public ResponseCode getResponseCode() {
+        return responseCode;
     }
 }
