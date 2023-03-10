@@ -15,4 +15,5 @@ public class QiNiuYunConfig {
     private String secretKey;
     private String bucket;
     private String tmpDir;
+    private String previewUrl;
 }

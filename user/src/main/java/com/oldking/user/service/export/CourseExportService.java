@@ -73,8 +73,7 @@ public class CourseExportService implements ExportDispatcher<CourseExportRequest
                     break;
                 }
                 eCourseList = page.getList().stream().map(this::initExcel).collect(Collectors.toList());
-                Long sheetName = startIndex / 10;
-                writeSheet.setSheetName(sheetName.toString());
+                writeSheet.setSheetName(String.valueOf(startIndex / 10));
                 excelWriter.write(eCourseList, writeSheet);
                 startIndex++;
                 eCourseList.clear();

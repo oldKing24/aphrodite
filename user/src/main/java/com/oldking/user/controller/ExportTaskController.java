@@ -1,6 +1,7 @@
 package com.oldking.user.controller;
 
 import com.oldking.response.AphroditeResponse;
+import com.oldking.response.PageBean;
 import com.oldking.user.request.ExportRequest;
 import com.oldking.user.response.ExportTask;
 import com.oldking.user.service.ExportTaskService;
@@ -34,5 +35,11 @@ public class ExportTaskController {
     public AphroditeResponse<Long> commit(@RequestBody ExportRequest exportRequest) {
         Long taskId = exportComposite.commitTask(exportRequest.getType(), 0L, exportRequest.getText());
         return AphroditeResponse.success(taskId);
+    }
+
+    @GetMapping("/page")
+    public AphroditeResponse<PageBean<ExportTask>> page(ExportTask exportTask, long page, long rows, String sortField, String sortType) {
+        PageBean<ExportTask> pageData = exportTaskService.page(exportTask, page, rows, sortField, sortType);
+        return AphroditeResponse.success(pageData);
     }
 }
