@@ -3,6 +3,7 @@ package com.oldking.user.service.export;
 import com.alibaba.fastjson.JSONObject;
 import com.oldking.exception.BaseException;
 import com.oldking.user.request.export.BaseExportRequest;
+import com.oldking.user.request.importExcel.BaseImportRequest;
 import com.oldking.user.service.ExportTaskService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,12 +42,19 @@ public class ExportComposite implements ExportDispatcher<BaseExportRequest> {
 
     @Override
     public Long commitImportTask(String type, Long taskId, String filePath) {
-        return null;
+        // 创建任务
+        taskId = exportTaskService.save(type, filePath);
+        // 提交任务
+        getInstanceByType(type).commitImportTask(type, taskId, getImportRequestStr(type, taskId, filePath));
+        return taskId;
     }
 
     @Override
     public void doImportJob(String type, Long taskId) {
-
+        // 更新任务进行中
+        exportTaskService.running(taskId);
+        // 执行任务
+        getInstanceByType(type).doImportJob(type, taskId);
     }
 
     private ExportDispatcher getInstanceByType(String type) {
@@ -65,6 +73,14 @@ public class ExportComposite implements ExportDispatcher<BaseExportRequest> {
         request.setType(type);
         request.setTaskId(taskId);
         request.setExtra(extra);
+        return JSONObject.toJSONString(request);
+    }
+
+    private String getImportRequestStr(String type, Long taskId, String filePath) {
+        BaseImportRequest request = new BaseImportRequest();
+        request.setType(type);
+        request.setTaskId(taskId);
+        request.setFilePath(filePath);
         return JSONObject.toJSONString(request);
     }
 }

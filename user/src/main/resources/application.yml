@@ -3,6 +3,10 @@ server:
 spring:
   application:
     name: aphrodite-user
+  servlet:
+    multipart:
+      enabled: true
+      max-file-size: 10MB
 
   datasource:
     type: com.alibaba.druid.pool.DruidDataSource
@@ -41,7 +45,8 @@ rocketmq:
   producer:
     group: test
   consumer:
-    group: test
+    exportGroup: export
+    importGroup: import
     pullBatchSize: 10
 send:
   email:

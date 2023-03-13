@@ -13,5 +13,7 @@ import java.util.List;
  */
 @Component
 public interface CourseMapper extends BaseMapper<PCourse> {
-    public List<PCourse> listCourse(@Param("startTime") LocalDateTime startTime, @Param("endTime") LocalDateTime endTime, @Param("studentId") Long studentId);
+    List<PCourse> listCourse(@Param("startTime") LocalDateTime startTime, @Param("endTime") LocalDateTime endTime, @Param("studentId") Long studentId);
+
+    boolean saveBatch(List<PCourse> list);
 }

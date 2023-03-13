@@ -1,18 +1,16 @@
 package com.oldking.user.utils;
 
 import com.alibaba.excel.EasyExcel;
-import com.alibaba.excel.EasyExcelFactory;
 import com.alibaba.excel.ExcelWriter;
 import com.alibaba.excel.read.listener.ReadListener;
-import com.alibaba.excel.write.metadata.WriteSheet;
 import com.oldking.user.config.QiNiuYunConfig;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.URLEncoder;
 import java.util.List;
 
@@ -40,12 +38,8 @@ public class ExcelUtil {
         }
     }
 
-    public <T> void importExcel(MultipartFile file, Class<T> cls, ReadListener<T> readListener) {
-        try {
-            EasyExcel.read(file.getInputStream(), cls, readListener).sheet().doRead();
-        } catch (IOException e) {
-            log.error("导入文件失败,原因：{}", e.getMessage());
-        }
+    public <T> void importExcel(InputStream inputStream, Class<T> cls, ReadListener<T> readListener) {
+        EasyExcel.read(inputStream, cls, readListener).sheet().doRead();
     }
 
     public <T> void simpleWrite(String fileName, Class<T> cls, List<T> list, String sheetName) {

@@ -1,5 +1,6 @@
 package com.oldking.user.service.export;
 
+import com.alibaba.excel.EasyExcel;
 import com.alibaba.excel.EasyExcelFactory;
 import com.alibaba.excel.ExcelWriter;
 import com.alibaba.excel.write.metadata.WriteSheet;
@@ -14,6 +15,7 @@ import com.oldking.user.enums.ExportTypeConstant;
 import com.oldking.user.repository.CourseRepository;
 import com.oldking.user.request.export.CourseExportRequest;
 import com.oldking.user.response.Course;
+import com.oldking.user.response.ExportTask;
 import com.oldking.user.service.ExportTaskService;
 import com.oldking.user.utils.ExcelUtil;
 import com.oldking.user.utils.FileUtil;
@@ -49,7 +51,7 @@ public class CourseExportService implements ExportDispatcher<CourseExportRequest
 
     @Override
     public Long commitExportTask(String type, Long taskId, String extra) {
-        rocketMQProducer.sendExportMsg("test", type, extra);
+        rocketMQProducer.sendExportMsg("export", type, extra);
         return taskId;
     }
 
@@ -111,12 +113,37 @@ public class CourseExportService implements ExportDispatcher<CourseExportRequest
 
     @Override
     public Long commitImportTask(String type, Long taskId, String filePath) {
-        return null;
+        rocketMQProducer.sendExportMsg("import", type, filePath);
+        return taskId;
     }
 
     @Override
     public void doImportJob(String type, Long taskId) {
-
+        ExportTask detail = exportTaskService.detail(taskId);
+        if (detail == null) {
+            log.error("任务【{}】不存在，忽略", taskId);
+            return;
+        }
+        log.info("开始下载导入文件");
+        String localFileName = qiNiuYunConfig.getTmpDir() + "\\" + System.currentTimeMillis() + ".xlsx";
+        fileUtil.downLoadHttpFile(qiNiuYunConfig.getPreviewUrl() + detail.getUrl(), localFileName);
+        log.info("下载导入文件完成，文件地址{}", localFileName);
+        log.info("开始导入文件至数据库中");
+        File file = new File(localFileName);
+        try {
+            EasyExcel.read(localFileName, ECourse.class, new CourseExportListener(courseRepository)).sheet().doRead();
+        } catch (Exception e) {
+            log.error("导入文件出现异常，原因：【{}】", e.getMessage());
+            exportTaskService.error(taskId, e.getMessage());
+            return;
+        } finally {
+            log.info("删除临时文件");
+            // 删除临时文件
+            file.delete();
+        }
+        log.info("完成导入文件");
+        // 更新成功任务
+        exportTaskService.success(taskId, detail.getUrl());
     }
 
     private ECourse initExcel(PCourse pCourse) {

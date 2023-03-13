@@ -28,4 +28,13 @@
           and cs.student_id = #{studentId}
         order by c.id
     </select>
+
+    <insert id="saveBatch">
+        INSERT INTO course
+        (name, content, `type`, start_time, end_time, teacher_id, image, url, create_time, create_user, update_time,
+        update_user) VALUES
+        <foreach collection="list" separator="," item="item">
+            (#{item.name},#{item.content},#{item.type},#{item.startTime},#{item.endTime},#{item.teacherId},#{item.image},#{item.url},#{item.createTime},#{item.createUser},#{item.updateTime},#{item.updateUser})
+        </foreach>
+    </insert>
 </mapper>

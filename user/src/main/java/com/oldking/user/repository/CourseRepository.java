@@ -28,6 +28,10 @@ public class CourseRepository {
         return course.getId();
     }
 
+    public void batchSave(List<PCourse> courseList) {
+        courseMapper.saveBatch(courseList);
+    }
+
 
     public void edit(PCourse course) {
         Assert.isTrue(course.getId() != null, "id不能为空");

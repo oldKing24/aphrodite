@@ -34,6 +34,14 @@ public class ExportTaskService {
     }
 
     @Transactional
+    public Long save(String type, String filePath) {
+        PExportTask pExportTask = initTask(type);
+        pExportTask.setUrl(filePath);
+        exportTaskRepository.save(pExportTask);
+        return pExportTask.getId();
+    }
+
+    @Transactional
     public void running(Long id) {
         PExportTask detail = exportTaskRepository.detail(id);
         if (detail == null) {
