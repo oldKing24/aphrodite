@@ -47,6 +47,7 @@ rocketmq:
   consumer:
     exportGroup: export
     importGroup: import
+    userRegisterGroup: userRegister
     pullBatchSize: 10
 send:
   email:

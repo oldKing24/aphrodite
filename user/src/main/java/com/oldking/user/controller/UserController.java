@@ -2,6 +2,7 @@ package com.oldking.user.controller;
 
 import com.oldking.response.AphroditeResponse;
 import com.oldking.response.PageBean;
+import com.oldking.user.client.RocketMQProducer;
 import com.oldking.user.request.LoginRequest;
 import com.oldking.user.request.SendCodeRequest;
 import com.oldking.user.request.UserRequest;
@@ -29,10 +30,14 @@ import javax.validation.Valid;
 public class UserController {
     @Autowired
     private UserService userService;
+    @Autowired
+    private RocketMQProducer producer;
 
     @PostMapping("/register")
     public AphroditeResponse<Long> register(@Valid @RequestBody UserRequest userRequest) {
-        return AphroditeResponse.success(userService.register(userRequest));
+        Long userId = userService.register(userRequest);
+        producer.syncSendDelay("userRegister", userId, 50000, 2);
+        return AphroditeResponse.success(userId);
     }
 
     @PostMapping("/sendCode")

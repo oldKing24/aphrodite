@@ -18,14 +18,14 @@ public class TestService {
     // 指定使用beanname为doSomethingExecutor的线程池
     @Async("doSomethingExecutor")
     public String doSomething(String message) {
-        String test = todoFeign.test();
-        log.info("do something, message={},test={}", message, test);
-
-        try {
-            Thread.sleep(1000);
-        } catch (InterruptedException e) {
-            log.error("do something error: ", e);
-        }
-        return message;
+//        String test = todoFeign.test();
+//        log.info("do something, message={},test={}", message, test);
+        throw new IllegalArgumentException("111");
+//        try {
+//            Thread.sleep(1000);
+//        } catch (InterruptedException e) {
+//            log.error("do something error: ", e);
+//        }
+//        return message;
     }
 }

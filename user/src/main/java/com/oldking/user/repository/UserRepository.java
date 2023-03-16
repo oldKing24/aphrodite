@@ -22,6 +22,10 @@ public class UserRepository {
         return user;
     }
 
+    public PUser detail(Long id) {
+        return userMapper.selectById(id);
+    }
+
     public PUser findByEmail(String email) {
         QueryWrapper<PUser> query = new QueryWrapper<>();
         query.eq("email", email);
